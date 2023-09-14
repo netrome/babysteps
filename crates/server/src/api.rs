@@ -3,17 +3,21 @@ pub async fn serve(event_store: EventStore, address: ([u8; 4], u16)) {
 
     let add_event = warp::post()
         .and(event_store.clone())
-        .and(warp::path("event"))
+        .and(warp::path!("api" / "event"))
         .and(warp::body::json::<Event>())
         .and_then(add_event_handler);
 
     let query_events = warp::get()
         .and(event_store)
-        .and(warp::path("events"))
+        .and(warp::path!("api" / "events"))
         .and(warp::query::<QueryEvents>())
         .and_then(query_events_handler);
 
-    let routes = add_event.or(query_events);
+    let static_files = warp::path("app").and(warp::fs::dir("crates/app/dist"));
+
+    let routes = add_event
+        .or(query_events)
+        .or(static_files);
 
     warp::serve(routes).run(address).await;
 }
