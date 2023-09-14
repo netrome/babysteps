@@ -1,7 +1,8 @@
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Event {
-    pub timestamp: time::OffsetDateTime,
     pub event_type: EventType,
+    pub event_time: time::OffsetDateTime,
+    pub created_at: time::OffsetDateTime,
     // Additional fields, such as signature, can be added here.
 }
 
@@ -28,19 +29,18 @@ pub struct Meal {
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
-pub enum NapLocation {
-    InBed,
-    InBabyCarrier,
-    Other(String),
-}
-
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct NapStart {
-    pub timestamp: time::OffsetDateTime,
     pub location: Option<NapLocation>,
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct NapEnd {
-    pub timestamp: time::OffsetDateTime,
+    pub location: Option<NapLocation>,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub enum NapLocation {
+    InBed,
+    InBabyCarrier,
+    Other(String),
 }
