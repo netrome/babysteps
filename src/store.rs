@@ -1,3 +1,4 @@
+#[derive(Debug, Clone)]
 pub struct EventStore {
     db: sled::Db,
 }
