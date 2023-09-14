@@ -39,4 +39,4 @@ impl EventStore {
 
 use std::collections::VecDeque;
 
-use crate::event::Event;
+use babysteps_event::Event;

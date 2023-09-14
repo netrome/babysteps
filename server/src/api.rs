@@ -37,5 +37,6 @@ use warp::Filter;
 use warp::http::StatusCode;
 use std::convert::Infallible;
 
-use crate::event::Event;
+use babysteps_event::Event;
+
 use crate::store::EventStore;

@@ -33,9 +33,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
+name = "babysteps-event"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "sled",
+ "time",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "warp",
+]
+
+[[package]]
 name = "babysteps-server"
 version = "0.1.0"
 dependencies = [
+ "babysteps-event",
  "serde",
  "serde_json",
  "sled",
