@@ -41,6 +41,7 @@ export class ViewEvents extends LitElement {
 
   render() {
     return html`
+      <h1>All events</h1>
       ${this.error ? html`<div class="error">${this.error}</div>` : ''}
       <ul>
         ${this.events.map(
