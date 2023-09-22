@@ -28,13 +28,14 @@ async fn add_event_handler(event_store: EventStore, event: Event) -> Result<impl
 }
 
 async fn query_events_handler(event_store: EventStore, query: QueryEvents) -> Result<impl warp::Reply, Infallible> {
-    let events = event_store.get_latest_events(query.count).expect("Error querying events");
+    let count = query.count.unwrap_or(100);
+    let events = event_store.get_latest_events(count).expect("Error querying events");
     Ok(warp::reply::json(&events))
 }
 
 #[derive(serde::Deserialize)]
 struct QueryEvents {
-    count: usize,
+    count: Option<usize>,
 }
 
 use warp::Filter;
