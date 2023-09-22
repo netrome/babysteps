@@ -1,4 +1,25 @@
 import { css, html, LitElement } from "lit";
+import "router-slot";
+
+import { ViewEvents } from "./view_events";
+
+customElements.whenDefined("router-slot").then(async () => {
+  const routerSlot = document.querySelector("router-slot");
+  routerSlot.add([
+    {
+      path: "events",
+      component: ViewEvents
+    },
+    {
+      path: "new",
+      component: SimpleGreeting
+    },
+    {
+      path: "**",
+      redirectTo: "events"
+    }
+  ]);
+});
 
 export class SimpleGreeting extends LitElement {
   static properties = {
@@ -22,12 +43,4 @@ export class SimpleGreeting extends LitElement {
     return html`<p>Hello, ${this.name}!</p>`;
   }
 }
-customElements.define("simple-greeting", SimpleGreeting);
-
-async function getEvents() {
-  const response = await fetch("/api/events");
-  const events = await response.json();
-  console.log(events);
-}
-
-getEvents().then(() => console.log("Great success!"));
+customElements.define("bs-simple-greeting", SimpleGreeting);

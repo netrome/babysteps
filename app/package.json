@@ -10,7 +10,8 @@
   "author": "Mårten Blankfors",
   "license": "MIT",
   "dependencies": {
-    "lit": "^2.8.0"
+    "lit": "^2.8.0",
+    "router-slot": "^1.5.5"
   },
   "devDependencies": {
     "parcel": "^2.9.3"
