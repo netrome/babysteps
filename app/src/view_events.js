@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { css, html, LitElement } from "lit";
 
 export class ViewEvents extends LitElement {
   static properties = {
@@ -29,7 +29,7 @@ export class ViewEvents extends LitElement {
 
   async fetchEvents() {
     try {
-      const response = await fetch('/api/events'); // Adjust the URL accordingly
+      const response = await fetch("/api/events"); // Adjust the URL accordingly
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -42,16 +42,17 @@ export class ViewEvents extends LitElement {
   render() {
     return html`
       <h1>All events</h1>
-      ${this.error ? html`<div class="error">${this.error}</div>` : ''}
+      ${this.error ? html`<div class="error">${this.error}</div>` : ""}
       <ul>
-        ${this.events.map(
-          (event) =>
-            html`<li>${JSON.stringify(event)}</li>`
-        )}
+        ${
+      this.events.map(
+        (event) => html`<li>${JSON.stringify(event)}</li>`,
+      )
+    }
       </ul>
     `;
   }
 }
 
 // Register the custom element
-customElements.define('bs-view-events', ViewEvents);
+customElements.define("bs-view-events", ViewEvents);
