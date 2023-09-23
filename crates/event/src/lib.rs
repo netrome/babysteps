@@ -18,16 +18,16 @@ pub enum EventType {
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct Meal {
+    pub quantity: Option<f32>, // Quantity in milliliters or grams.
+    pub food_type: FoodType,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub enum FoodType {
     BreastMilk,
     Formula,
     TastePortion(String),
-}
-
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
-pub struct Meal {
-    pub quantity: Option<f32>, // Quantity in milliliters or grams.
-    pub food_type: FoodType,
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
