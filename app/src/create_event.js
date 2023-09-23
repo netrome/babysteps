@@ -9,6 +9,7 @@ export class CreateEvent extends LitElement {
   constructor() {
     super();
     this.selectedEventType = "";
+    this.eventTime = new Date();
   }
 
   static styles = css`
@@ -25,12 +26,20 @@ export class CreateEvent extends LitElement {
           <!-- More options will be added here for other event types -->
         </select>
       </label>
+      <label>
+        Event Time:
+        <input type="datetime-local" .value=${this.eventTime} @input=${this.eventTimeChanged}/>
+      </label>
       ${
       this.selectedEventType === "NapStart"
         ? html`<nap-start-event-form @napstart-event-created=${this.handleEventCreated}></nap-start-event-form><p>Yo</p>`
         : ""
     }
     `;
+  }
+
+  eventTimeChanged(event) {
+    this.eventTime = new Date(event.target.value);
   }
 
   selectChanged(event) {
@@ -42,13 +51,19 @@ export class CreateEvent extends LitElement {
 
     const apiUrl = "/api/event";
 
+    let bs_event = {
+      event_time: this.eventTime.toISOString(),
+      created_at: new Date().toISOString(),
+      ...event.detail
+    }
+
     // Send a POST request to the backend
     fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(event.detail),
+      body: JSON.stringify(bs_event),
     })
       .then((response) => {
         if (!response.ok) {

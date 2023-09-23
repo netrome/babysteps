@@ -5,7 +5,6 @@ export class NapStartEventForm extends LitElement {
     super();
     this.location = "InBed";
     this.otherLocation = "";
-    this.eventTime = new Date();
   }
 
   static styles = css`
@@ -35,17 +34,9 @@ export class NapStartEventForm extends LitElement {
         : ""
     }
         </label>
-        <label>
-          Event Time:
-          <input type="datetime-local" .value=${this.eventTime} @input=${this.eventTimeChanged}/>
-        </label>
         <button type="submit">Create NapStart Event</button>
       </form>
     `;
-  }
-
-  eventTimeChanged(event) {
-    this.eventTime = new Date(event.target.value);
   }
 
   locationChanged(event) {
@@ -64,8 +55,6 @@ export class NapStartEventForm extends LitElement {
       event_type: {
         "NapStart": { location: locationDetail },
       },
-      event_time: this.eventTime.toISOString(),
-      created_at: new Date().toISOString(),
     };
 
     this.dispatchEvent(
