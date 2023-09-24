@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
 import { choose } from "lit/directives/choose.js";
 import "./nap.js";
+import "./meal.js";
 
 export class CreateEvent extends LitElement {
   static properties = {
@@ -25,6 +26,7 @@ export class CreateEvent extends LitElement {
           <option value="">Select an event type</option>
           <option value="NapStart">Nap Start</option>
           <option value="NapEnd">Nap End</option>
+          <option value="Meal">Meal</option>
           <!-- More options will be added here for other event types -->
         </select>
       </label>
@@ -38,6 +40,8 @@ export class CreateEvent extends LitElement {
           html`<nap-event-form phase="start" @nap-event-created=${this.handleEventCreated}></nap-event-form>`],
         ["NapEnd", () =>
           html`<nap-event-form phase="end" @nap-event-created=${this.handleEventCreated}></nap-event-form>`],
+        ["Meal", () =>
+          html`<meal-event-form @meal-event-created=${this.handleEventCreated}></meal-event-form>`],
       ], () =>
         html`<p>No event selected</p>`)
     }

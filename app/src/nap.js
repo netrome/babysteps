@@ -6,7 +6,7 @@ export class NapEventForm extends LitElement {
     _location: { type: String, state: true },
     _otherLocation: { type: String, state: true },
   };
-  
+
   constructor() {
     super();
     this._location = "InBed";
@@ -48,7 +48,7 @@ export class NapEventForm extends LitElement {
 
   eventName() {
     const phase = this.phase;
-    return "Nap" + phase[0].toUpperCase() + phase.slice(1)
+    return "Nap" + phase[0].toUpperCase() + phase.slice(1);
   }
 
   locationChanged(event) {
@@ -59,9 +59,11 @@ export class NapEventForm extends LitElement {
     event.preventDefault();
 
     const eventName = this.eventName();
+
     const locationDetail = this._location === "Other"
       ? { Other: this._otherLocation }
       : this._location;
+
     const eventDetail = {
       event_type: {
         [eventName]: { location: locationDetail },

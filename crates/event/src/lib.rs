@@ -27,7 +27,7 @@ pub struct Meal {
 pub enum FoodType {
     BreastMilk,
     Formula,
-    TastePortion(String),
+    Other(String),
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
