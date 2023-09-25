@@ -41,17 +41,75 @@ export class ViewEvents extends LitElement {
     }
   }
 
+  tableHeader() {
+    return html`
+      <thead>
+        <tr>
+          <th scope="col">Event date</th>
+          <th scope="col">Event time</th>
+          <th scope="col">Event type</th>
+          <th scope="col">Event details</th>
+        </tr>
+      </thead>
+    `
+  }
+
+  tableBody() {
+    return html`
+      <tbody>
+        ${this.events.map(this.eventRow.bind(this))}
+      </tbody>
+    `
+  }
+
+  eventRow(event) {
+    let event_time_date = new Date(event.event_time);
+    let date_string = event_time_date.toLocaleDateString();
+    let time_string = event_time_date.toLocaleTimeString();
+    let event_type = Object.keys(event.event_type)[0];
+    let event_details = this.eventDetails(event);
+    return html`
+      <tr>
+        <td>${date_string}</td>
+        <td>${time_string}</td>
+        <td>${event_type}</td>
+        <td>${event_details}</td>
+      </tr>
+    `
+  }
+
+  eventDetails(event) {
+    let event_type = Object.keys(event.event_type)[0];
+
+    return {
+      ["NapStart"]: this.napDetails,
+      ["NapEnd"]: this.napDetails,
+      ["Meal"]: this.mealDetails,
+    }[event_type](event.event_type[event_type])
+  }
+
+  mealDetails(meal) {
+    const quantityStr = meal.quantity ? ", quantity: " + meal.quantity : "";
+    const otherFoodType = meal.food_type?.Other;
+    const foodType = otherFoodType ? otherFoodType + " (other)" : meal.food_type;
+    return "Type: " + foodType + quantityStr
+  }
+
+  napDetails(nap) {
+    const otherLocation = nap.location?.Other;
+    const location = otherLocation ?? nap.location;
+    
+    return "Location: " + location
+  }
+
   render() {
     return html`
-      <h1>All events</h1>
-      ${this.error ? html`<div class="error">${this.error}</div>` : ""}
-      <ul>
-        ${
-      this.events.map(
-        (event) => html`<li>${JSON.stringify(event)}</li>`,
-      )
-    }
-      </ul>
+      <figure>
+        <table role="grid">
+          ${this.tableHeader()}
+          ${this.tableBody()}
+        </table>
+      </figure>
     `;
   }
 }
