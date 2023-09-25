@@ -4,6 +4,8 @@ import "router-slot";
 import { ViewEvents } from "./view_events";
 import { CreateEvent } from "./create_event";
 
+import { addStylesheetsToElement, addStylesheetsToRoot } from "./style";
+
 customElements.whenDefined("router-slot").then(async () => {
   const routerSlot = document.querySelector("router-slot");
   routerSlot.add([
@@ -14,6 +16,10 @@ customElements.whenDefined("router-slot").then(async () => {
     {
       path: "new",
       component: CreateEvent,
+    },
+    {
+      path: "greet",
+      component: SimpleGreeting,
     },
     {
       path: "**",
@@ -39,9 +45,17 @@ export class SimpleGreeting extends LitElement {
     this.name = "World";
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    addStylesheetsToElement(this.shadowRoot);
+  }
   // Render the UI as a function of component state
   render() {
-    return html`<p>Hello, ${this.name}!</p>`;
+    return html`
+      <p>Hello, ${this.name}!</p>
+      `;
   }
 }
 customElements.define("bs-simple-greeting", SimpleGreeting);
+
+addStylesheetsToRoot();

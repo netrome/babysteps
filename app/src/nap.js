@@ -1,4 +1,5 @@
 import { css, html, LitElement } from "lit";
+import { addStylesheetsToElement } from "./style";
 
 export class NapEventForm extends LitElement {
   static properties = {
@@ -12,6 +13,11 @@ export class NapEventForm extends LitElement {
     this._location = "InBed";
     this._otherLocation = "";
     this.phase = "";
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    addStylesheetsToElement(this.shadowRoot);
   }
 
   static styles = css`

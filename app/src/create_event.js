@@ -2,6 +2,7 @@ import { css, html, LitElement } from "lit";
 import { choose } from "lit/directives/choose.js";
 import "./nap.js";
 import "./meal.js";
+import { addStylesheetsToElement } from "./style.js";
 
 export class CreateEvent extends LitElement {
   static properties = {
@@ -12,6 +13,11 @@ export class CreateEvent extends LitElement {
     super();
     this.selectedEventType = "";
     this.eventTime = new Date();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    addStylesheetsToElement(this.shadowRoot);
   }
 
   static styles = css`

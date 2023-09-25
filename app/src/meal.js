@@ -1,4 +1,5 @@
 import { css, html, LitElement } from "lit";
+import { addStylesheetsToElement } from "./style";
 
 export class MealEventForm extends LitElement {
   static properties = {
@@ -11,6 +12,11 @@ export class MealEventForm extends LitElement {
     this.quantity = "";
     this._foodType = "BreastMilk";
     this._otherFood = "";
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    addStylesheetsToElement(this.shadowRoot);
   }
 
   static styles = css`

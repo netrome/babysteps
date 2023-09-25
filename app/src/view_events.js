@@ -1,4 +1,5 @@
 import { css, html, LitElement } from "lit";
+import { addStylesheetsToElement } from "./style";
 
 export class ViewEvents extends LitElement {
   static properties = {
@@ -24,6 +25,7 @@ export class ViewEvents extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    addStylesheetsToElement(this.shadowRoot);
     this.fetchEvents();
   }
 
