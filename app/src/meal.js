@@ -23,10 +23,8 @@ export class MealEventForm extends LitElement {
     /* Add any styles you want here */
   `;
 
-  render() {
+  quantityHtml() {
     return html`
-      <p>Haj</p>
-      <form @submit=${this.handleSubmit}>
         <label>
           Quantity (ml or g): 
           <input 
@@ -36,17 +34,23 @@ export class MealEventForm extends LitElement {
             placeholder="Enter quantity"
           />
         </label>
-        <label>
-          Food Type: 
-          <select .value=${this._foodType} @change=${this.foodTypeChanged}>
-            <!-- List the FoodType enum options here -->
-            <option value="BreastMilk">Breast Milk</option>
-            <option value="Formula">Formula</option>
-            <option value="Other">Other</option>
-            <!-- Add other food types as per your enum -->
-          </select>
-            ${
-          this._foodType === "Other"
+    `
+  }
+
+  foodTypeSelectInput() {
+    return html`
+        <select .value=${this._foodType} @change=${this.foodTypeChanged}>
+          <!-- List the FoodType enum options here -->
+          <option value="BreastMilk">Breast Milk</option>
+          <option value="Formula">Formula</option>
+          <option value="Other">Other</option>
+          <!-- Add other food types as per your enum -->
+        </select>
+    `
+  }
+
+  optionalOtherFoodTypeInput() {
+    return this._foodType === "Other"
             ? html`<input
                     type="text"
                     .value=${this._otherFood}
@@ -54,8 +58,25 @@ export class MealEventForm extends LitElement {
                     placeholder="Specify other food"
                     />`
             : ""
-          }
+  }
+
+  foodTypeHtml() {
+    return html`
+        <label>
+          Food Type: 
+          <div class="grid">
+            ${this.foodTypeSelectInput()}
+            ${this.optionalOtherFoodTypeInput()}
+          </div>
         </label>
+      `
+  }
+
+  render() {
+    return html`
+      <form @submit=${this.handleSubmit}>
+        ${this.foodTypeHtml()}
+        ${this.quantityHtml()}
         <button type="submit">Create Meal Event</button>
       </form>
     `;

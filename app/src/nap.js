@@ -24,29 +24,43 @@ export class NapEventForm extends LitElement {
     /* Add any styles you want here */
   `;
 
+  locationSelectHtml() {
+    return html`
+        <select .value=${this._location} @change=${this.locationChanged}>
+          <option value="InBed">In Bed</option>
+          <option value="InBabyCarrier">In Baby Carrier</option>
+          <option value="Other">Other</option>
+        </select>
+    `
+  }
+
+  optionalOtherLocationTextInput() {
+    return this._location === "Other"
+        ? html`<input 
+              type="text" 
+              .value=${this._otherLocation} 
+              @input=${(e) => (this._otherLocation = e.target.value)} 
+              placeholder="Specify other location"
+            />`
+        : ""
+  }
+
+  locationHtml() {
+    return html`
+        <label>
+          Location: 
+          <div class="grid">
+            ${this.locationSelectHtml()}
+            ${this.optionalOtherLocationTextInput()}
+          </div>
+        </label>
+    `
+  }
+
   render() {
     return html`
       <form @submit=${this.handleSubmit}>
-        <label>
-          Location: 
-          <select .value=${this._location} @change=${this.locationChanged}>
-            <option value="InBed">In Bed</option>
-            <option value="InBabyCarrier">In Baby Carrier</option>
-            <option value="Other">Other</option>
-          </select>
-          ${
-      this._location === "Other"
-        ? html`
-                <input 
-                  type="text" 
-                  .value=${this._otherLocation} 
-                  @input=${(e) => (this._otherLocation = e.target.value)} 
-                  placeholder="Specify other location"
-                />
-              `
-        : ""
-    }
-        </label>
+        ${this.locationHtml()}
         <button type="submit">Create ${this.eventName()} Event</button>
       </form>
     `;

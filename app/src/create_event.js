@@ -24,7 +24,7 @@ export class CreateEvent extends LitElement {
     /* Add any styles you want here */
   `;
 
-  render() {
+  selectHtml() {
     return html`
       <label>
         Select Event Type: 
@@ -36,12 +36,20 @@ export class CreateEvent extends LitElement {
           <!-- More options will be added here for other event types -->
         </select>
       </label>
+    `
+  }
+
+  eventTimeHtml() {
+    return html`
       <label>
         Event Time:
         <input type="datetime-local" .value=${this.eventTime} @input=${this.eventTimeChanged}/>
       </label>
-      ${
-      choose(this.selectedEventType, [
+    `
+  }
+
+  eventSpecificHtml() {
+    return choose(this.selectedEventType, [
         ["NapStart", () =>
           html`<nap-event-form phase="start" @nap-event-created=${this.handleEventCreated}></nap-event-form>`],
         ["NapEnd", () =>
@@ -49,8 +57,19 @@ export class CreateEvent extends LitElement {
         ["Meal", () =>
           html`<meal-event-form @meal-event-created=${this.handleEventCreated}></meal-event-form>`],
       ], () =>
-        html`<p>No event selected</p>`)
-    }
+        html`<p>No event selected</p>`
+    )
+  }
+
+  render() {
+    return html`
+      <article>
+        <div class="grid">
+          ${this.selectHtml()}
+          ${this.eventTimeHtml()}
+        </div>
+        ${this.eventSpecificHtml()}
+      </article>
     `;
   }
 
