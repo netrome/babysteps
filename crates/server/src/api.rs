@@ -13,13 +13,15 @@ pub async fn serve(event_store: EventStore, address: ([u8; 4], u16)) {
         .and(warp::query::<QueryEvents>())
         .and_then(query_events_handler);
 
-    let app_files = warp::path("app").and(warp::fs::dir("app/dist"));
     let static_files = warp::path("static").and(warp::fs::dir("app/static"));
+    let app_files = warp::path("app").and(warp::fs::dir("app/public"));
+    let app_path = warp::get().and(warp::fs::file("app/public/index.html"));
 
     let routes = add_event
         .or(query_events)
+        .or(static_files)
         .or(app_files)
-        .or(static_files);
+        .or(app_path);
 
     warp::serve(routes).run(address).await;
 }

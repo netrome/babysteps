@@ -36,6 +36,7 @@ export class ViewEvents extends LitElement {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       this.events = await response.json();
+      this.events.reverse();
     } catch (error) {
       this.error = error.message;
     }
