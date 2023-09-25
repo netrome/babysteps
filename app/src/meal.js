@@ -34,7 +34,7 @@ export class MealEventForm extends LitElement {
             placeholder="Enter quantity"
           />
         </label>
-    `
+    `;
   }
 
   foodTypeSelectInput() {
@@ -46,18 +46,18 @@ export class MealEventForm extends LitElement {
           <option value="Other">Other</option>
           <!-- Add other food types as per your enum -->
         </select>
-    `
+    `;
   }
 
   optionalOtherFoodTypeInput() {
     return this._foodType === "Other"
-            ? html`<input
+      ? html`<input
                     type="text"
                     .value=${this._otherFood}
                     @input=${this.otherFoodChanged}
                     placeholder="Specify other food"
                     />`
-            : ""
+      : "";
   }
 
   foodTypeHtml() {
@@ -69,7 +69,7 @@ export class MealEventForm extends LitElement {
             ${this.optionalOtherFoodTypeInput()}
           </div>
         </label>
-      `
+      `;
   }
 
   render() {

@@ -11,7 +11,7 @@ export class CreateEvent extends LitElement {
 
   constructor() {
     super();
-    this.selectedEventType = "";
+    this.selectedEventType = "NapStart";
     this.eventTime = new Date();
   }
 
@@ -24,19 +24,29 @@ export class CreateEvent extends LitElement {
     /* Add any styles you want here */
   `;
 
-  selectHtml() {
+  selectButtonsHtml() {
     return html`
-      <label>
-        Select Event Type: 
-        <select .value=${this.selectedEventType} @change=${this.selectChanged}>
-          <option value="">Select an event type</option>
-          <option value="NapStart">Nap Start</option>
-          <option value="NapEnd">Nap End</option>
-          <option value="Meal">Meal</option>
-          <!-- More options will be added here for other event types -->
-        </select>
-      </label>
-    `
+      <div class="grid">
+        ${this.selectButton("NapStart")}
+        ${this.selectButton("NapEnd")}
+        ${this.selectButton("Meal")}
+      </div>
+    `;
+  }
+
+  selectButton(option) {
+    const buttonClass = this.selectedEventType === option
+      ? "secondary outline"
+      : "outline";
+    return html`<button class=${buttonClass} @click=${
+      this.onSelectButtonClick(option)
+    }>${option}</button>`;
+  }
+
+  onSelectButtonClick(option) {
+    return (_e) => {
+      this.selectedEventType = option;
+    };
   }
 
   eventTimeHtml() {
@@ -45,27 +55,34 @@ export class CreateEvent extends LitElement {
         Event Time:
         <input type="datetime-local" .value=${this.eventTime} @input=${this.eventTimeChanged}/>
       </label>
-    `
+    `;
   }
 
   eventSpecificHtml() {
     return choose(this.selectedEventType, [
-        ["NapStart", () =>
-          html`<nap-event-form phase="start" @nap-event-created=${this.handleEventCreated}></nap-event-form>`],
-        ["NapEnd", () =>
-          html`<nap-event-form phase="end" @nap-event-created=${this.handleEventCreated}></nap-event-form>`],
-        ["Meal", () =>
-          html`<meal-event-form @meal-event-created=${this.handleEventCreated}></meal-event-form>`],
-      ], () =>
-        html`<p>No event selected</p>`
-    )
+      [
+        "NapStart",
+        () =>
+          html`<nap-event-form phase="start" @nap-event-created=${this.handleEventCreated}></nap-event-form>`,
+      ],
+      [
+        "NapEnd",
+        () =>
+          html`<nap-event-form phase="end" @nap-event-created=${this.handleEventCreated}></nap-event-form>`,
+      ],
+      [
+        "Meal",
+        () =>
+          html`<meal-event-form @meal-event-created=${this.handleEventCreated}></meal-event-form>`,
+      ],
+    ], () => html`<p>No event selected</p>`);
   }
 
   render() {
     return html`
       <article>
+        ${this.selectButtonsHtml()}
         <div class="grid">
-          ${this.selectHtml()}
           ${this.eventTimeHtml()}
         </div>
         ${this.eventSpecificHtml()}

@@ -31,18 +31,18 @@ export class NapEventForm extends LitElement {
           <option value="InBabyCarrier">In Baby Carrier</option>
           <option value="Other">Other</option>
         </select>
-    `
+    `;
   }
 
   optionalOtherLocationTextInput() {
     return this._location === "Other"
-        ? html`<input 
+      ? html`<input 
               type="text" 
               .value=${this._otherLocation} 
               @input=${(e) => (this._otherLocation = e.target.value)} 
               placeholder="Specify other location"
             />`
-        : ""
+      : "";
   }
 
   locationHtml() {
@@ -54,7 +54,7 @@ export class NapEventForm extends LitElement {
             ${this.optionalOtherLocationTextInput()}
           </div>
         </label>
-    `
+    `;
   }
 
   render() {
