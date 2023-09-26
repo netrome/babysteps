@@ -21,7 +21,6 @@ export class NapEventForm extends LitElement {
   }
 
   static styles = css`
-    /* Add any styles you want here */
   `;
 
   locationSelectHtml() {

@@ -20,7 +20,6 @@ export class MealEventForm extends LitElement {
   }
 
   static styles = css`
-    /* Add any styles you want here */
   `;
 
   quantityHtml() {
