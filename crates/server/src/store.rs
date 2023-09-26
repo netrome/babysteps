@@ -4,7 +4,7 @@ pub struct EventStore {
 }
 
 impl EventStore {
-    pub fn new(path: Option<&str>) -> Result<Self, sled::Error> {
+    pub fn new(path: Option<impl AsRef<Path>>) -> Result<Self, sled::Error> {
         let config = if let Some(p) = path {
             sled::Config::default().path(p)
         } else {
@@ -37,6 +37,6 @@ impl EventStore {
     }
 }
 
-use std::collections::VecDeque;
+use std::{collections::VecDeque, path::Path};
 
 use babysteps_event::Event;

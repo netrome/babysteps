@@ -1,5 +1,12 @@
-pub async fn serve(event_store: EventStore, address: ([u8; 4], u16)) {
-    let event_store = warp::any().map(move || event_store.clone());
+pub struct Config<Addr> {
+    pub event_store: EventStore,
+    pub address: Addr,
+    pub static_root: PathBuf,
+    pub bundle_root: PathBuf
+}
+
+pub async fn serve(conf: Config<impl Into<SocketAddr>>) {
+    let event_store = warp::any().map(move || conf.event_store.clone());
 
     let add_event = warp::post()
         .and(event_store.clone())
@@ -13,9 +20,9 @@ pub async fn serve(event_store: EventStore, address: ([u8; 4], u16)) {
         .and(warp::query::<QueryEvents>())
         .and_then(query_events_handler);
 
-    let static_files = warp::path("static").and(warp::fs::dir("app/static"));
-    let app_files = warp::path("app").and(warp::fs::dir("app/public"));
-    let app_path = warp::get().and(warp::fs::file("app/public/index.html"));
+    let static_files = warp::path("static").and(warp::fs::dir(conf.static_root));
+    let app_files = warp::path("app").and(warp::fs::dir(conf.bundle_root.clone()));
+    let app_path = warp::get().and(warp::fs::file(conf.bundle_root.join("index.html")));
 
     let routes = add_event
         .or(query_events)
@@ -23,7 +30,7 @@ pub async fn serve(event_store: EventStore, address: ([u8; 4], u16)) {
         .or(app_files)
         .or(app_path);
 
-    warp::serve(routes).run(address).await;
+    warp::serve(routes).run(conf.address).await;
 }
 
 async fn add_event_handler(event_store: EventStore, event: Event) -> Result<impl warp::Reply, Infallible> {
@@ -42,9 +49,12 @@ struct QueryEvents {
     count: Option<usize>,
 }
 
+use std::convert::Infallible;
+use std::net::SocketAddr;
+use std::path::PathBuf;
+
 use warp::Filter;
 use warp::http::StatusCode;
-use std::convert::Infallible;
 
 use babysteps_event::Event;
 
