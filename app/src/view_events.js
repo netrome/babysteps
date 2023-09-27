@@ -35,8 +35,15 @@ export class ViewEvents extends LitElement {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      this.events = await response.json();
-      this.events.reverse();
+      var events = await response.json();
+
+      events.sort((a, b) => {
+        const dateA = new Date(a.event_time);
+        const dateB = new Date(b.event_time);
+        return dateB - dateA;
+      });
+
+      this.events = events;
     } catch (error) {
       this.error = error.message;
     }
