@@ -31,7 +31,7 @@ export class ViewEvents extends LitElement {
 
   async fetchEvents() {
     try {
-      const response = await fetch("/api/events");
+      const response = await fetch("/api/events?count=10000");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
