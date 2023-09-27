@@ -16,7 +16,10 @@ impl EventStore {
         Ok(Self { db })
     }
 
+    #[tracing::instrument(skip(self))]
     pub fn add_event(&self, event: &Event) -> Result<(), sled::Error> {
+        tracing::info!("Adding event");
+
         let key = event.created_at.to_string();
         let value = serde_json::to_vec(event).unwrap();
 

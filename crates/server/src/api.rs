@@ -33,18 +33,22 @@ pub async fn serve(conf: Config<impl Into<SocketAddr>>) {
     warp::serve(routes).run(conf.address).await;
 }
 
+#[tracing::instrument(skip(event_store))]
 async fn add_event_handler(event_store: EventStore, event: Event) -> Result<impl warp::Reply, Infallible> {
+    tracing::info!("Adding event");
     event_store.add_event(&event).expect("Error adding event");
     Ok(StatusCode::CREATED)
 }
 
+#[tracing::instrument(skip(event_store))]
 async fn query_events_handler(event_store: EventStore, query: QueryEvents) -> Result<impl warp::Reply, Infallible> {
     let count = query.count.unwrap_or(100);
     let events = event_store.get_latest_events(count).expect("Error querying events");
+    tracing::debug!("Returning events: {:?}", events.len());
     Ok(warp::reply::json(&events))
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct QueryEvents {
     count: Option<usize>,
 }
