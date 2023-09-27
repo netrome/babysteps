@@ -1,25 +1,15 @@
-import { css, html, LitElement } from "lit";
+import { html, LitElement } from "lit";
 import { addStylesheetsToElement } from "./style";
 
 export class ViewEvents extends LitElement {
   static properties = {
-    events: { type: Array },
+    events_per_day: { type: Object, state: true },
     error: { type: String },
   };
 
-  static styles = css`
-    :host {
-      display: block;
-      padding: 16px;
-    }
-    .error {
-      color: red;
-    }
-  `;
-
   constructor() {
     super();
-    this.events = [];
+    this.eventsPerDay = {};
     this.error = null;
   }
 
@@ -43,47 +33,53 @@ export class ViewEvents extends LitElement {
         return dateB - dateA;
       });
 
-      this.events = events;
+      var eventsPerDay = {};
+      events.forEach((e) => {
+        const eventDay = new Date(e.event_time).toLocaleDateString();
+        var dayEvents = eventsPerDay[eventDay] ?? [];
+        dayEvents.push(e);
+        eventsPerDay[eventDay] = dayEvents;
+      });
+
+      this.eventsPerDay = eventsPerDay;
+      this.requestUpdate();
     } catch (error) {
       this.error = error.message;
     }
   }
 
-  tableHeader() {
+  eventsTableHeader() {
     return html`
       <thead>
         <tr>
-          <th scope="col">Event date</th>
           <th scope="col">Event time</th>
           <th scope="col">Event type</th>
           <th scope="col">Event details</th>
         </tr>
       </thead>
-    `
+    `;
   }
 
-  tableBody() {
+  eventsTableBody(events) {
     return html`
       <tbody>
-        ${this.events.map(this.eventRow.bind(this))}
+        ${events.map(this.eventRow.bind(this))}
       </tbody>
-    `
+    `;
   }
 
   eventRow(event) {
     let event_time_date = new Date(event.event_time);
-    let date_string = event_time_date.toLocaleDateString();
     let time_string = event_time_date.toLocaleTimeString();
     let event_type = Object.keys(event.event_type)[0];
     let event_details = this.eventDetails(event);
     return html`
       <tr>
-        <td>${date_string}</td>
         <td>${time_string}</td>
         <td>${event_type}</td>
         <td>${event_details}</td>
       </tr>
-    `
+    `;
   }
 
   eventDetails(event) {
@@ -93,31 +89,51 @@ export class ViewEvents extends LitElement {
       ["NapStart"]: this.napDetails,
       ["NapEnd"]: this.napDetails,
       ["Meal"]: this.mealDetails,
-    }[event_type](event.event_type[event_type])
+    }[event_type](event.event_type[event_type]);
   }
 
   mealDetails(meal) {
     const quantityStr = meal.quantity ? ", quantity: " + meal.quantity : "";
     const otherFoodType = meal.food_type?.Other;
-    const foodType = otherFoodType ? otherFoodType + " (other)" : meal.food_type;
-    return "Type: " + foodType + quantityStr
+    const foodType = otherFoodType
+      ? otherFoodType + " (other)"
+      : meal.food_type;
+    return "Type: " + foodType + quantityStr;
   }
 
   napDetails(nap) {
     const otherLocation = nap.location?.Other;
     const location = otherLocation ?? nap.location;
-    
-    return "Location: " + location
+
+    return "Location: " + location;
   }
 
-  render() {
+  eventsTable(events) {
     return html`
       <figure>
         <table role="grid">
-          ${this.tableHeader()}
-          ${this.tableBody()}
+          ${this.eventsTableHeader()}
+          ${this.eventsTableBody(events)}
         </table>
       </figure>
+    `;
+  }
+
+  dayEventsTable(day, events) {
+    return html`
+      <h2>${day}</h2>
+      ${this.eventsTable(events)}
+    `;
+  }
+
+  render() {
+    const eventsTables = Object.keys(this.eventsPerDay).map(
+      (day) => this.dayEventsTable(day, this.eventsPerDay[day]),
+    );
+    return html`
+      <article>
+        ${eventsTables}
+      </article>
     `;
   }
 }

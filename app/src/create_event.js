@@ -53,7 +53,9 @@ export class CreateEvent extends LitElement {
     return html`
       <label>
         Event Time:
-        <input type="datetime-local" .value=${toDatetimeLocal(this.eventTime)} @input=${this.eventTimeChanged}/>
+        <input type="datetime-local" .value=${
+      toDatetimeLocal(this.eventTime)
+    } @input=${this.eventTimeChanged}/>
       </label>
     `;
   }
@@ -139,13 +141,13 @@ export class CreateEvent extends LitElement {
 }
 
 function toDatetimeLocal(date) {
-    let yyyy = date.getFullYear().toString();
-    let MM = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is zero-based
-    let dd = date.getDate().toString().padStart(2, '0');
-    let hh = date.getHours().toString().padStart(2, '0');
-    let mm = date.getMinutes().toString().padStart(2, '0');
+  let yyyy = date.getFullYear().toString();
+  let MM = (date.getMonth() + 1).toString().padStart(2, "0"); // getMonth() is zero-based
+  let dd = date.getDate().toString().padStart(2, "0");
+  let hh = date.getHours().toString().padStart(2, "0");
+  let mm = date.getMinutes().toString().padStart(2, "0");
 
-    return yyyy + '-' + MM + '-' + dd + 'T' + hh + ':' + mm;
+  return yyyy + "-" + MM + "-" + dd + "T" + hh + ":" + mm;
 }
 
 customElements.define("create-event", CreateEvent);
