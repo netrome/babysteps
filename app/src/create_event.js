@@ -20,10 +20,6 @@ export class CreateEvent extends LitElement {
     addStylesheetsToElement(this.shadowRoot);
   }
 
-  static styles = css`
-    /* Add any styles you want here */
-  `;
-
   selectButtonsHtml() {
     return html`
       <div class="grid">
@@ -93,11 +89,6 @@ export class CreateEvent extends LitElement {
   }
 
   eventTimeChanged(event) {
-    console.log(this.eventTime);
-    console.log(this.eventTime.toLocaleString());
-    console.log(this.eventTime.toISOString());
-    console.log(String(this.eventTime));
-    console.log(event.target.value);
     this.eventTime = new Date(event.target.value);
   }
 
