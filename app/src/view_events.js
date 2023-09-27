@@ -31,7 +31,7 @@ export class ViewEvents extends LitElement {
 
   async fetchEvents() {
     try {
-      const response = await fetch("/api/events"); // Adjust the URL accordingly
+      const response = await fetch("/api/events");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
