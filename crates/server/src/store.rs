@@ -27,6 +27,16 @@ impl EventStore {
         Ok(())
     }
 
+    #[tracing::instrument(skip(self))]
+    pub fn remove_event(&self, event: &Event) -> Result<(), sled::Error> {
+        tracing::info!("Removing event");
+
+        let key = event.created_at.to_string();
+
+        self.db.remove(key)?;
+        Ok(())
+    }
+
     pub fn get_latest_events(&self, n: usize) -> Result<VecDeque<Event>, sled::Error> {
         let mut events = VecDeque::new();
 

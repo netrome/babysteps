@@ -10,9 +10,15 @@ pub async fn serve(conf: Config<impl Into<SocketAddr>>) {
 
     let add_event = warp::post()
         .and(event_store.clone())
-        .and(warp::path!("api" / "event"))
+        .and(warp::path!("api" / "event" / "add"))
         .and(warp::body::json::<Event>())
         .and_then(add_event_handler);
+
+    let delete_event = warp::post()
+        .and(event_store.clone())
+        .and(warp::path!("api" / "event" / "delete"))
+        .and(warp::body::json::<Event>())
+        .and_then(delete_event_handler);
 
     let query_events = warp::get()
         .and(event_store)
@@ -25,6 +31,7 @@ pub async fn serve(conf: Config<impl Into<SocketAddr>>) {
     let app_path = warp::get().and(warp::fs::file(conf.bundle_root.join("index.html")));
 
     let routes = add_event
+        .or(delete_event)
         .or(query_events)
         .or(static_files)
         .or(app_files)
@@ -37,6 +44,13 @@ pub async fn serve(conf: Config<impl Into<SocketAddr>>) {
 async fn add_event_handler(event_store: EventStore, event: Event) -> Result<impl warp::Reply, Infallible> {
     tracing::info!("Adding event");
     event_store.add_event(&event).expect("Error adding event");
+    Ok(StatusCode::CREATED)
+}
+
+#[tracing::instrument(skip(event_store))]
+async fn delete_event_handler(event_store: EventStore, event: Event) -> Result<impl warp::Reply, Infallible> {
+    tracing::info!("Deleting event");
+    event_store.remove_event(&event).expect("Error removing event");
     Ok(StatusCode::CREATED)
 }
 

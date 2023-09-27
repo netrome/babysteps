@@ -106,7 +106,7 @@ export class CreateEvent extends LitElement {
   handleEventCreated(event) {
     console.log("Event Created:", event.detail);
 
-    const apiUrl = "/api/event";
+    const apiUrl = "/api/event/add";
 
     let bs_event = {
       event_time: this.eventTime.toISOString(),
