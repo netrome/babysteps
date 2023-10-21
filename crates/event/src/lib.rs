@@ -46,3 +46,37 @@ pub enum NapLocation {
     InBabyCarrier,
     Other(String),
 }
+
+impl Event {
+    pub fn id(&self) -> [u8; 32] {
+        let mut event_data = self.event_type.as_byte_vec();
+
+        for timestamp in [self.event_time, self.created_at] {
+            event_data.extend(
+                timestamp
+                    .format(&time::format_description::well_known::Iso8601::DEFAULT)
+                    // When can this panic? 🤔
+                    .unwrap()
+                    .as_bytes(),
+            );
+        }
+
+        sha2::Sha256::digest(&event_data).into()
+    }
+}
+
+impl EventType {
+    fn as_byte_vec(&self) -> Vec<u8> {
+        let mut writer = Vec::new();
+
+        // Should probably never fail unless we're out of memory or something really bad has happened
+        ciborium::into_writer(&self, &mut writer).unwrap();
+
+        writer
+    }
+}
+
+use sha2::Digest;
+
+#[cfg(test)]
+mod tests {}
