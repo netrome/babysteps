@@ -1,19 +1,22 @@
 {
   "name": "babysteps-app",
+  "type": "module",
   "version": "1.0.0",
   "description": "Web UI for the babysteps application",
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html --dist-dir public --public-url /app/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   },
   "author": "Mårten Blankfors",
   "license": "MIT",
   "dependencies": {
+    "cbor": "^9.0.1",
     "lit": "^2.8.0",
     "router-slot": "^1.5.5"
   },
   "devDependencies": {
+    "ava": "^5.3.1",
     "parcel": "^2.9.3"
   }
 }

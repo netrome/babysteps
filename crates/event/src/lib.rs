@@ -20,7 +20,7 @@ pub enum EventType {
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Meal {
-    pub quantity: Option<f32>, // Quantity in milliliters or grams.
+    pub quantity: Option<f64>, // Quantity in milliliters or grams.
     pub food_type: FoodType,
 }
 
@@ -208,7 +208,7 @@ mod tests {
 
         let mut meal_event = Event {
             event_type: EventType::Meal(Meal {
-                quantity: Some(100.0),
+                quantity: Some(100.0001),
                 food_type: FoodType::BreastMilk,
             }),
             event_time: time::OffsetDateTime::parse("2023-10-21T14:30:00Z", &Iso8601::DEFAULT)
