@@ -218,6 +218,9 @@ mod tests {
             auth: None,
         };
 
+        // No auth field should not authenticate
+        assert!(!meal_event.authenticate());
+
         meal_event.sign(&signing_key);
 
         // Authentication should succeed with proper signature
