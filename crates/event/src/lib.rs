@@ -6,6 +6,7 @@ pub struct Event {
     #[serde(with = "time::serde::iso8601")]
     pub created_at: time::OffsetDateTime,
     // Additional fields, such as signature, can be added here.
+    pub auth: Option<Auth>,
 }
 
 // Enum to represent the different event types
@@ -47,6 +48,16 @@ pub enum NapLocation {
     Other(String),
 }
 
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct Auth {
+    /// Secp256k1 X-only public key
+    verifying_key: [u8; 32],
+
+    /// BIP-340 Schnorr signature
+    #[serde(with = "serde_big_array::BigArray")]
+    signature: [u8; 64],
+}
+
 impl Event {
     pub fn id(&self) -> [u8; 32] {
         let mut event_data = self.event_type.as_byte_vec();
@@ -63,6 +74,32 @@ impl Event {
 
         sha2::Sha256::digest(&event_data).into()
     }
+
+    pub fn authenticate(&self) -> bool {
+        let Some(auth) = &self.auth else {
+            return false
+        };
+
+        let Ok(verifying_key) = VerifyingKey::from_bytes(&auth.verifying_key) else {
+            return false
+        };
+
+        let Ok(signature): Result<Signature, _> = auth.signature.as_ref().try_into() else {
+            return false
+        };
+
+        verifying_key.verify(&self.id(), &signature).is_ok()
+    }
+
+    pub fn sign(&mut self, signing_key: &SigningKey) {
+        let verifying_key = signing_key.verifying_key().to_bytes().try_into().unwrap();
+        let signature = signing_key.sign(&self.id()).to_bytes();
+
+        self.auth = Some(Auth {
+            verifying_key,
+            signature,
+        })
+    }
 }
 
 impl EventType {
@@ -76,6 +113,7 @@ impl EventType {
     }
 }
 
+use k256::schnorr::{signature::Signer, signature::Verifier, Signature, SigningKey, VerifyingKey};
 use sha2::Digest;
 use time::format_description::well_known::Iso8601;
 
