@@ -132,6 +132,7 @@ mod tests {
                 .unwrap(),
             created_at: time::OffsetDateTime::parse("2023-11-21T14:30:00Z", &Iso8601::DEFAULT)
                 .unwrap(),
+            auth: None,
         };
 
         let id_hex = array_bytes::bytes2hex("", &meal_event.id());
@@ -151,6 +152,7 @@ mod tests {
                 .unwrap(),
             created_at: time::OffsetDateTime::parse("2023-11-21T15:05:00Z", &Iso8601::DEFAULT)
                 .unwrap(),
+            auth: None,
         };
 
         let id_hex = array_bytes::bytes2hex("", &nap_start_event.id());
@@ -170,6 +172,7 @@ mod tests {
                 .unwrap(),
             created_at: time::OffsetDateTime::parse("2023-11-21T16:05:00Z", &Iso8601::DEFAULT)
                 .unwrap(),
+            auth: None,
         };
 
         let id_hex = array_bytes::bytes2hex("", &nap_end_event.id());
@@ -187,6 +190,7 @@ mod tests {
                 .unwrap(),
             created_at: time::OffsetDateTime::parse("2023-11-21T17:05:00Z", &Iso8601::DEFAULT)
                 .unwrap(),
+            auth: None,
         };
 
         let id_hex = array_bytes::bytes2hex("", &other_event.id());
@@ -194,5 +198,35 @@ mod tests {
             id_hex,
             "1894c406084d633830e6132628b463c38c934e88e992adfc619c275f4e749bc3"
         );
+    }
+
+    #[test]
+    fn test_sign_event() {
+        let signing_key_hex = "cdd35c508edd2fb2c4fa2c3548439d8ff0799937ab9b44370411a21cc95a2119";
+        let signing_key =
+            SigningKey::from_bytes(&array_bytes::hex2bytes(signing_key_hex).unwrap()).unwrap();
+
+        let mut meal_event = Event {
+            event_type: EventType::Meal(Meal {
+                quantity: Some(100.0),
+                food_type: FoodType::BreastMilk,
+            }),
+            event_time: time::OffsetDateTime::parse("2023-10-21T14:30:00Z", &Iso8601::DEFAULT)
+                .unwrap(),
+            created_at: time::OffsetDateTime::parse("2023-11-21T14:30:00Z", &Iso8601::DEFAULT)
+                .unwrap(),
+            auth: None,
+        };
+
+        meal_event.sign(&signing_key);
+
+        // Authentication should succeed with proper signature
+        assert!(meal_event.authenticate());
+
+        // Tamper with signature
+        meal_event.auth.as_mut().unwrap().signature[0] += 1;
+
+        // Authentication should now fail
+        assert!(!meal_event.authenticate());
     }
 }
