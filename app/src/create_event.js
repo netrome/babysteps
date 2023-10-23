@@ -3,6 +3,8 @@ import { choose } from "lit/directives/choose.js";
 import "./nap.js";
 import "./meal.js";
 import { addStylesheetsToElement } from "./style.js";
+import { KeyStore } from "./key_store.js";
+import { signEvent } from "./event.js";
 
 export class CreateEvent extends LitElement {
   static properties = {
@@ -18,6 +20,7 @@ export class CreateEvent extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     addStylesheetsToElement(this.shadowRoot);
+    this.keyStore = new KeyStore('privateKey');
   }
 
   selectButtonsHtml() {
@@ -106,6 +109,9 @@ export class CreateEvent extends LitElement {
       created_at: new Date().toISOString(),
       ...event.detail,
     };
+
+    // Adds auth field to bs_event
+    signEvent(bs_event, this.keyStore.getOrCreateKey());
 
     // Send a POST request to the backend
     fetch(apiUrl, {

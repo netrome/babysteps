@@ -65,3 +65,26 @@ export function signEventId(eventId, privateKey) {
   // Return the signature as a Uint8Array
   return signature;
 }
+
+/**
+ * Signs the given event, adding the auth field with the signature and verifying key.
+ *
+ * @param {Object} event - The event to sign.
+ * @param {Uint8Array} privateKey - The private key to sign the event with.
+ */
+export function signEvent(event, privateKey) {
+  // Compute the event ID
+  const eventId = computeEventId(event);
+
+  // Sign the event ID
+  const signature = signEventId(eventId, privateKey);
+
+  // Compute the verifying key (public key)
+  const verifyingKey = schnorr.getPublicKey(privateKey);
+
+  // Add the auth field to the event
+  event.auth = {
+    verifying_key: Array.from(verifyingKey),
+    signature: Array.from(signature),
+  };
+}
