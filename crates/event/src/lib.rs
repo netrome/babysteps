@@ -92,12 +92,12 @@ impl Event {
             return false
         };
 
-        verifying_key.verify(&self.id(), &signature).is_ok()
+        verifying_key.verify_prehash(&self.id(), &signature).is_ok()
     }
 
     pub fn sign(&mut self, signing_key: &SigningKey) {
         let verifying_key = signing_key.verifying_key().to_bytes().try_into().unwrap();
-        let signature = signing_key.sign(&self.id()).to_bytes();
+        let signature = signing_key.sign_prehash(&self.id()).unwrap().to_bytes();
 
         self.auth = Some(Auth {
             verifying_key,
@@ -117,7 +117,10 @@ impl EventType {
     }
 }
 
-use k256::schnorr::{signature::Signer, signature::Verifier, Signature, SigningKey, VerifyingKey};
+use k256::schnorr::{
+    signature::hazmat::{PrehashSigner, PrehashVerifier},
+    Signature, SigningKey, VerifyingKey,
+};
 use sha2::Digest;
 use time::format_description::well_known::Iso8601;
 
