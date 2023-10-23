@@ -228,7 +228,7 @@ export class ViewEvents extends LitElement {
   }
 
   mealDetails(meal) {
-    const quantityStr = meal.quantity ? ", quantity: " + meal.quantity : "";
+    const quantityStr = meal.quantity ? ", quantity: " + Math.round(meal.quantity) : "";
     const otherFoodType = meal.food_type?.Other;
     const foodType = otherFoodType
       ? otherFoodType + " (other)"
