@@ -46,6 +46,10 @@ export function computeEventId(event) {
   return hashBuffer;
 }
 
+export function computeEventIdHex(event) {
+  return toHexString(computeEventId(event))
+}
+
 /**
  * Signs the given event ID using the provided private key.
  *
@@ -87,4 +91,11 @@ export function signEvent(event, privateKey) {
     verifying_key: Array.from(verifyingKey),
     signature: Array.from(signature),
   };
+}
+
+function toHexString(byteArray) {
+  return Array.from(
+    byteArray,
+    (byte) => ("0" + (byte & 0xFF).toString(16)).slice(-2),
+  ).join("");
 }

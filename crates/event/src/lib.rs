@@ -75,6 +75,10 @@ impl Event {
         sha2::Sha256::digest(&event_data).into()
     }
 
+    pub fn id_hex(&self) -> String {
+        array_bytes::bytes2hex("", self.id())
+    }
+
     pub fn authenticate(&self) -> bool {
         let Some(auth) = &self.auth else {
             return false

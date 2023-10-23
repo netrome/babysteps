@@ -42,8 +42,7 @@ pub async fn serve(conf: Config<impl Into<SocketAddr>>) {
 
 #[tracing::instrument(skip(event_store))]
 async fn add_event_handler(event_store: EventStore, event: Event) -> Result<impl warp::Reply, Infallible> {
-    tracing::info!("Adding event");
-    tracing::info!("Event auth valid?: {}", event.authenticate());
+    tracing::info!("Adding event. Id: {}, auth: {}", event.id_hex(), event.authenticate());
     event_store.add_event(&event).expect("Error adding event");
     Ok(StatusCode::CREATED)
 }

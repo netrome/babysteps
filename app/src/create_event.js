@@ -4,7 +4,7 @@ import "./nap.js";
 import "./meal.js";
 import { addStylesheetsToElement } from "./style.js";
 import { KeyStore } from "./key_store.js";
-import { signEvent } from "./event.js";
+import { computeEventIdHex, signEvent } from "./event.js";
 
 export class CreateEvent extends LitElement {
   static properties = {
@@ -112,6 +112,9 @@ export class CreateEvent extends LitElement {
 
     // Adds auth field to bs_event
     signEvent(bs_event, this.keyStore.getOrCreateKey());
+
+    console.log("Event ID ", computeEventIdHex(bs_event));
+    console.log("Submitting event ", bs_event);
 
     // Send a POST request to the backend
     fetch(apiUrl, {
