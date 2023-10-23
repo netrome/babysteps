@@ -5,7 +5,7 @@ export class ViewEvents extends LitElement {
   static properties = {
     eventsPerDay: { type: Object, state: true },
     selectedEvent: { type: Object, state: true },
-    toDelete: { type: Object, state: true},
+    toDelete: { type: Object, state: true },
     error: { type: String },
   };
 
@@ -131,19 +131,21 @@ export class ViewEvents extends LitElement {
   deleteEventPrompt() {
     const prompt = this.toDelete;
     const open = this.toDelete ? true : false;
-    return html `
-        <dialog open=${ open }>
+    return html`
+        <dialog open=${open}>
           <article>
             <h3>Confirm delete</h3>
             <p>Do you really want to delete this event?</p>
-            <p>${ JSON.stringify(this.toDelete) }</p>
+            <p>${JSON.stringify(this.toDelete)}</p>
             <footer>
-              <p role="button" class="contrast" @click=${ this.promptDelete(null) }>No</p>
-              <p role="button" class="primary" @click=${ this.handleDeleteEvent }>Yes</p>
+              <p role="button" class="contrast" @click=${
+      this.promptDelete(null)
+    }>No</p>
+              <p role="button" class="primary" @click=${this.handleDeleteEvent}>Yes</p>
             </footer>
           </article>
         </dialog>
-      `
+      `;
   }
 
   dayEventsTable(day, events) {
@@ -192,10 +194,14 @@ export class ViewEvents extends LitElement {
     const event_details = this.eventDetails(event);
 
     const classes = (event == this.selectedEvent) ? "event selected" : "event";
-    const deleteButton = (event == this.selectedEvent) ? html`<span role="button" class="contrast delete" @click=${ this.promptDelete(event) }>X</span>` : ""; 
-    
+    const deleteButton = (event == this.selectedEvent)
+      ? html`<span role="button" class="contrast delete" @click=${
+        this.promptDelete(event)
+      }>X</span>`
+      : "";
+
     return html`
-      <tr class=${ classes } @click=${ this.eventSelected(event) }>
+      <tr class=${classes} @click=${this.eventSelected(event)}>
         <td>${time_string}</td>
         <td>${event_type}</td>
         <td>${event_details}</td>

@@ -11,6 +11,7 @@
   "author": "Mårten Blankfors",
   "license": "MIT",
   "dependencies": {
+    "@noble/curves": "^1.2.0",
     "cbor": "^9.0.1",
     "lit": "^2.8.0",
     "router-slot": "^1.5.5"
