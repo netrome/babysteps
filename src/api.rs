@@ -74,6 +74,6 @@ use std::path::PathBuf;
 use warp::Filter;
 use warp::http::StatusCode;
 
-use babysteps_event::Event;
+use crate::event::Event;
 
 use crate::store::EventStore;

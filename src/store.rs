@@ -52,4 +52,4 @@ impl EventStore {
 
 use std::{collections::VecDeque, path::Path};
 
-use babysteps_event::Event;
+use crate::event::Event;

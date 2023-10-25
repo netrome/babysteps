@@ -87,26 +87,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
-name = "babysteps-event"
+name = "babysteps"
 version = "0.1.0"
 dependencies = [
  "array-bytes",
  "ciborium",
+ "clap",
+ "hex-literal",
  "k256",
  "serde",
  "serde-big-array",
- "sha2",
- "time",
-]
-
-[[package]]
-name = "babysteps-server"
-version = "0.1.0"
-dependencies = [
- "babysteps-event",
- "clap",
- "serde",
  "serde_json",
+ "sha2",
  "sled",
  "time",
  "tokio",
@@ -603,6 +595,12 @@ name = "hermit-abi"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "443144c8cdadd93ebf52ddb4056d257f5b52c04d3c804e657d19eb73fc33668b"
+
+[[package]]
+name = "hex-literal"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6fe2267d4ed49bc07b63801559be28c718ea06c4738b7a03c94df7386d2cde46"
 
 [[package]]
 name = "hmac"
