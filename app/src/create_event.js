@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "lit";
+import { html, LitElement } from "lit";
 import { choose } from "lit/directives/choose.js";
 import "./nap.js";
 import "./meal.js";

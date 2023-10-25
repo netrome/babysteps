@@ -91,12 +91,15 @@ async fn query_baby_info_handler(event_store: EventStore) -> Result<impl warp::R
 #[derive(Debug, serde::Serialize)]
 struct BabyInfo {
     nap_status: NapStatus,
+    #[serde(with = "time::serde::iso8601")]
     last_meal_time: time::OffsetDateTime,
 }
 
 #[derive(Debug, serde::Serialize)]
 enum NapStatus {
+    #[serde(with = "time::serde::iso8601")]
     Awake{since: time::OffsetDateTime},
+    #[serde(with = "time::serde::iso8601")]
     Asleep{since: time::OffsetDateTime},
 }
 

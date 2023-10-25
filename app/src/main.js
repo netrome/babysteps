@@ -1,5 +1,6 @@
 import "router-slot";
 
+import { ViewBabyStatus } from "./view_baby_status";
 import { ViewEvents } from "./view_events";
 import { CreateEvent } from "./create_event";
 
@@ -15,6 +16,10 @@ customElements.whenDefined("router-slot").then(async () => {
     {
       path: "new",
       component: CreateEvent,
+    },
+    {
+      path: "status",
+      component: ViewBabyStatus,
     },
     {
       path: "**",
