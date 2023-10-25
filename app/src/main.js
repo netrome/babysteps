@@ -23,7 +23,7 @@ customElements.whenDefined("router-slot").then(async () => {
     },
     {
       path: "**",
-      redirectTo: "events",
+      redirectTo: "status",
     },
   ]);
 });

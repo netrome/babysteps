@@ -71,7 +71,7 @@ async fn query_events_handler(event_store: EventStore, query: QueryEvents) -> Re
 #[tracing::instrument(skip(event_store))]
 async fn query_baby_info_handler(event_store: EventStore) -> Result<impl warp::Reply, Infallible> {
     let mut events: Vec<_> = event_store.get_latest_events(BABY_INFO_HORIZON).expect("Error querying events").into_iter().collect();
-    events.sort_by_key(|event| event.event_time);
+    events.sort_by_key(|event| std::cmp::Reverse(event.event_time));
 
     // Assume one of the last few events is a nap, OR DIE!
     let nap_status = events.iter().find_map(NapStatus::from_event).unwrap();
