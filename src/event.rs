@@ -104,6 +104,21 @@ impl Event {
             signature,
         })
     }
+
+    pub fn is_nap(&self) -> bool {
+        match self.event_type {
+            EventType::NapStart(_) => true,
+            EventType::NapEnd(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_meal(&self) -> bool {
+        match self.event_type {
+            EventType::Meal(_) => true,
+            _ => false,
+        }
+    }
 }
 
 impl EventType {
