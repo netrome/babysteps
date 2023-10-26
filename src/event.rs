@@ -106,18 +106,14 @@ impl Event {
     }
 
     pub fn is_nap(&self) -> bool {
-        match self.event_type {
-            EventType::NapStart(_) => true,
-            EventType::NapEnd(_) => true,
-            _ => false,
-        }
+        matches!(
+            self.event_type,
+            EventType::NapStart(_) | EventType::NapEnd(_)
+        )
     }
 
     pub fn is_meal(&self) -> bool {
-        match self.event_type {
-            EventType::Meal(_) => true,
-            _ => false,
-        }
+        matches!(self.event_type, EventType::Meal(_))
     }
 }
 
@@ -157,7 +153,7 @@ mod tests {
             auth: None,
         };
 
-        let id_hex = array_bytes::bytes2hex("", &meal_event.id());
+        let id_hex = array_bytes::bytes2hex("", meal_event.id());
         assert_eq!(
             id_hex,
             "cdd35c508edd2fb2c4fa2c3548439d8ff0799937ab9b44370411a21cc95a2119"
@@ -177,7 +173,7 @@ mod tests {
             auth: None,
         };
 
-        let id_hex = array_bytes::bytes2hex("", &nap_start_event.id());
+        let id_hex = array_bytes::bytes2hex("", nap_start_event.id());
         assert_eq!(
             id_hex,
             "b9a806a86a711285693def17cb34239c9bd767bde1dd04d37f381c2f5da78bb6"
@@ -197,7 +193,7 @@ mod tests {
             auth: None,
         };
 
-        let id_hex = array_bytes::bytes2hex("", &nap_end_event.id());
+        let id_hex = array_bytes::bytes2hex("", nap_end_event.id());
         assert_eq!(
             id_hex,
             "f0aad6d17b417c0d3fe19cbbfdff6341763823c499159f2350d3ca77dc81e0ca"
@@ -215,7 +211,7 @@ mod tests {
             auth: None,
         };
 
-        let id_hex = array_bytes::bytes2hex("", &other_event.id());
+        let id_hex = array_bytes::bytes2hex("", other_event.id());
         assert_eq!(
             id_hex,
             "1894c406084d633830e6132628b463c38c934e88e992adfc619c275f4e749bc3"
