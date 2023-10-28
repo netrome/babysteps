@@ -6,13 +6,16 @@ export class KeyStore {
   getKey() {
     const keyHex = localStorage.getItem(this.keyName);
     if (keyHex) {
-      return new Uint8Array(keyHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+      return new Uint8Array(
+        keyHex.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)),
+      );
     }
     return null;
   }
 
   setKey(key) {
-    const keyHex = Array.from(key).map(b => b.toString(16).padStart(2, '0')).join('');
+    const keyHex = Array.from(key).map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
     localStorage.setItem(this.keyName, keyHex);
   }
 

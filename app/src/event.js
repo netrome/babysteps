@@ -47,7 +47,7 @@ export function computeEventId(event) {
 }
 
 export function computeEventIdHex(event) {
-  return toHexString(computeEventId(event))
+  return toHexString(computeEventId(event));
 }
 
 /**

@@ -3,6 +3,7 @@ import "router-slot";
 import { ViewBabyStatus } from "./view_baby_status";
 import { ViewEvents } from "./view_events";
 import { CreateEvent } from "./create_event";
+import "./theme_toggle";
 
 import { addStylesheetsToRoot } from "./style";
 

@@ -20,7 +20,7 @@ export class CreateEvent extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     addStylesheetsToElement(this.shadowRoot);
-    this.keyStore = new KeyStore('privateKey');
+    this.keyStore = new KeyStore("privateKey");
   }
 
   selectButtonsHtml() {

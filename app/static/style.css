@@ -35,3 +35,13 @@
   --switch-color: var(--primary-inverse);
   --switch-checked-background-color: var(--primary);
 }
+
+header {
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 1rem 1rem !important;
+  margin: 0 0 !important;
+  background-color: #00000012;
+}
+
+theme-toggle {}

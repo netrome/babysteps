@@ -9,10 +9,15 @@
   <base href="/" />
 </head>
 <body>
+  <header>
+    <theme-toggle></theme-toggle>
+    <div class="container">
+      <a href="/status" role="button" class="outline">See baby status</a>
+      <a href="/events" role="button" class="outline">View all events</a>
+      <a href="/new" role="button" class="outline">Create new event</a>
+    </div>
+  </header>
   <main class="container">
-    <a href="/status" role="button" class="outline">See baby status</a>
-    <a href="/events" role="button" class="outline">View all events</a>
-    <a href="/new" role="button" class="outline">Create new event</a>
     <router-slot></router-slot>
   </main>
   <script type="module" src="main.js"></script>

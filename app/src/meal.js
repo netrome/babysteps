@@ -102,7 +102,9 @@ export class MealEventForm extends LitElement {
     const eventDetail = {
       event_type: {
         "Meal": {
-          quantity: this.quantity ? (parseFloat(this.quantity) + 0.000001) : null,
+          quantity: this.quantity
+            ? (parseFloat(this.quantity) + 0.000001)
+            : null,
           food_type: foodType,
         },
       },

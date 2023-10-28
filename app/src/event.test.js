@@ -41,7 +41,7 @@ test("signing and verifying an event with BIP-340 Schnorr signatures using noble
   const computedId = computeEventId(event);
 
   // Generate a random private key and corresponding public key
-  const privateKey = Uint8Array.from({length: 32}, (_, i) => i + 1);
+  const privateKey = Uint8Array.from({ length: 32 }, (_, i) => i + 1);
   const publicKey = schnorr.getPublicKey(privateKey);
 
   // Sign the event ID with the private key using BIP-340 Schnorr signature
