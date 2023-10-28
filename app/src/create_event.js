@@ -132,7 +132,7 @@ export class CreateEvent extends LitElement {
       })
       .then((data) => {
         console.log("Event successfully created:", data);
-        history.pushState(null, "", "/events");
+        history.pushState(null, "", "/status");
       })
       .catch((error) => {
         console.error("Error creating event:", error);

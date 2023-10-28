@@ -6,8 +6,8 @@
   --primary-hover: #388e3c;
   --primary-focus: rgba(67, 160, 71, 0.125);
   --primary-inverse: #FFF;
-  --background1: #ddffad;
-  --background2: #ffffff;
+  --background1: #52ffee;
+  --background2: #ffffad;
   --background3: #ffaaff;
 }
 
@@ -47,48 +47,54 @@
 
 .background-animation {
   position: fixed;
-  bottom: -200vh;
-  right: -200vw;
-  height: 500vh;
-  width: 500vw;
-  background: linear-gradient(90deg, var(--background1), var(--background2) 25%, var(--background3) 30%, var(--background1) 35%, var(--background2) 50%, var(--background3) 60%, var(--background2) 70%, var(--background1) 75%);
+  bottom: -150vh;
+  right: -150vw;
+  height: 400vh;
+  width: 400vw;
+  background: radial-gradient(ellipse, var(--background2) 10%, var(--background1) 30%, var(--background2) 40%, var(--background3) 60%);
   z-index: -1;
 
   animation-name: background-move;
-  animation-duration: 4s;
+  animation-duration: 60s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+  animation-timing-function: ease-in-out;
 }
 
 @keyframes background-move {
   0% {
-    bottom: -300vh;
-    right: -140vw;
-    transform: rotate(10deg);
+    bottom: -100vh;
+    right: -50vw;
+    height: 300vh;
+    width: 400vw;
   }
 
   25% {
-    bottom: -230vh;
-    right: -160vw;
-    transform: rotate(90deg);
+    bottom: -100vh;
+    right: -20vw;
+    height: 300vh;
+    width: 200vw;
   }
 
   50% {
-    bottom: -230vh;
-    right: -160vw;
-    transform: rotate(270deg);
+    bottom: -100vh;
+    right: -50vw;
+    height: 300vh;
+    width: 400vw;
   }
 
   75% {
-    bottom: -210vh;
-    right: -230vw;
-    transform: rotate(50deg);
+    bottom: -100vh;
+    right: -20vw;
+    height: 300vh;
+    width: 200vw;
   }
 
   100% {
-    bottom: -110vh;
-    right: -130vw;
-    transform: rotate(130deg);
+    bottom: -100vh;
+    right: -120vw;
+    height: 300vh;
+    width: 400vw;
   }
 }
 
