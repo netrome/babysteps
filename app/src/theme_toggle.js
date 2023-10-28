@@ -31,6 +31,7 @@ export class ThemeToggle extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
     this.currentTheme = prefersDarkScheme ? 'dark' : 'light';
     document.documentElement.setAttribute("data-theme", this.currentTheme);
   }

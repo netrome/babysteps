@@ -6,6 +6,9 @@
   --primary-hover: #388e3c;
   --primary-focus: rgba(67, 160, 71, 0.125);
   --primary-inverse: #FFF;
+  --background1: #ddffad;
+  --background2: #ffffff;
+  --background3: #ffaaff;
 }
 
 /* Green Dark scheme (Auto) */
@@ -16,6 +19,9 @@
     --primary-hover: #4caf50;
     --primary-focus: rgba(67, 160, 71, 0.25);
     --primary-inverse: #FFF;
+    --background1: #112233;
+    --background2: #000000;
+    --background3: #113322;
   }
 }
 
@@ -26,6 +32,9 @@
   --primary-hover: #4caf50;
   --primary-focus: rgba(67, 160, 71, 0.25);
   --primary-inverse: #FFF;
+  --background1: #112233;
+  --background2: #000000;
+  --background3: #113322;
 }
 
 /* Green (Common styles) */
@@ -34,6 +43,53 @@
   --form-element-focus-color: var(--primary-focus);
   --switch-color: var(--primary-inverse);
   --switch-checked-background-color: var(--primary);
+}
+
+.background-animation {
+  position: fixed;
+  bottom: -200vh;
+  right: -200vw;
+  height: 500vh;
+  width: 500vw;
+  background: linear-gradient(90deg, var(--background1), var(--background2) 25%, var(--background3) 30%, var(--background1) 35%, var(--background2) 50%, var(--background3) 60%, var(--background2) 70%, var(--background1) 75%);
+  z-index: -1;
+
+  animation-name: background-move;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes background-move {
+  0% {
+    bottom: -300vh;
+    right: -140vw;
+    transform: rotate(10deg);
+  }
+
+  25% {
+    bottom: -230vh;
+    right: -160vw;
+    transform: rotate(90deg);
+  }
+
+  50% {
+    bottom: -230vh;
+    right: -160vw;
+    transform: rotate(270deg);
+  }
+
+  75% {
+    bottom: -210vh;
+    right: -230vw;
+    transform: rotate(50deg);
+  }
+
+  100% {
+    bottom: -110vh;
+    right: -130vw;
+    transform: rotate(130deg);
+  }
 }
 
 header {
