@@ -1,14 +1,16 @@
-import { css, html, LitElement } from "lit";
+import { css, html, LitElement, nothing } from "lit";
 import { addStylesheetsToElement } from "./style";
 
 export class ViewBabyStatus extends LitElement {
   static properties = {
     babyStatus: { type: Object, state: true },
+    babyAnimation: { type: Boolean, state: true },
   };
 
   constructor() {
     super();
     this.babyStatus = null;
+    this.babyAnimation = true;
   }
 
   connectedCallback() {
@@ -21,8 +23,58 @@ export class ViewBabyStatus extends LitElement {
     img {
       display: block;
       margin: auto;
-      width: 250px;
+      height: 8rem;
+      width: 8rem;
       filter: invert(48%) sepia(65%) saturate(447%) hue-rotate(73deg) brightness(96%) contrast(86%);
+    }
+
+    .bounce {
+      position: relative;
+      bottom: 0rem;
+      left: 0rem;
+      height: 8rem;
+      animation: bounce 0.23s, rotate 0.51s;
+      animation-timing-function: cubic-beizer(0.3, 0.8, 0.75, 1), ease-in-out;
+      animation-direction: alternate, alternate;
+      animation-iteration-count: 4, 2;
+    }
+
+    @keyframes bounce {
+      to {
+        height: 9rem;
+        width: 9rem;
+        bottom: 2rem;
+      }
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(30deg);
+      }
+    }
+
+    .tilt {
+      position: relative;
+      bottom: 0rem;
+      left: 0rem;
+      animation: tilt 2s;
+      animation-timing-function: linear;
+    }
+
+    @keyframes tilt {
+      30% {
+        bottom: 0.3rem;
+        left: 0.2rem;
+        transform: rotate(15deg);
+      }
+      70% {
+        bottom: -0.3rem;
+        left: 0.2rem;
+        transform: rotate(-8deg);
+      }
+      100% {
+        transform: rotate(0deg);
+      }
     }
 
     .grid {
@@ -84,13 +136,22 @@ export class ViewBabyStatus extends LitElement {
       lastMealTime,
     );
     const nextNapTime = isAwake ? this.calculateNextNapTime(statusTime) : "N/A";
+    const animateClass = this.babyAnimation
+      ? (isAwake ? "bounce" : "tilt")
+      : nothing;
 
     return html`
       <article class="grid">
         <div>
           <img src="${
       isAwake ? "static/awake-icon.png" : "static/sleep-icon.png"
-    }" alt="${isAwake ? "Awake" : "Asleep"}" />
+    }" alt="${
+      isAwake ? "Awake" : "Asleep"
+    }" class=${animateClass} @animationend=${(e) => {
+      if (e.elapsedTime > 1) this.babyAnimation = false;
+    }} @click=${() => {
+      this.babyAnimation = true;
+    }} />
         </div>
         <div>
           <p><b>${isAwake ? "Awake" : "Asleep"} since:</b> ${
