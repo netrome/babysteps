@@ -21,19 +21,19 @@ async fn main() {
 #[command(author, version, about, long_about = None)]
 struct Cli {
     /// Directory to persist the application state
-    #[arg(short, long)]
+    #[arg(short, long, env="BS_DATABASE_DIR")]
     database_dir: PathBuf,
 
     /// Root to serve static files
-    #[arg(short, long)]
+    #[arg(short, long, env="BS_STATIC_ROOT")]
     static_root: PathBuf,
 
     /// Root to serve application bundle
-    #[arg(short, long)]
+    #[arg(short, long, env="BS_BUNDLE_ROOT")]
     bundle_root: PathBuf,
 
     /// Port to serve on
-    #[arg(short, long)]
+    #[arg(short, long, env="BS_PORT")]
     port: u16,
 }
 
