@@ -5,6 +5,7 @@ async fn main() {
     babysteps::log::init().expect("Failed to initialize logging");
     tracing::info!("Hello world!");
 
+    // TODO: Swap event store. Make sure the new store runs migrations on startup :)
     let event_store = babysteps::sled_store::Store::new(Some(args.database_dir)).unwrap();
     let api_config = babysteps::api::Config {
         event_store,
