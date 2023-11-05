@@ -5,7 +5,7 @@ async fn main() {
     babysteps::log::init().expect("Failed to initialize logging");
     tracing::info!("Hello world!");
 
-    let event_store = babysteps::store::EventStore::new(Some(args.database_dir)).unwrap();
+    let event_store = babysteps::sled_store::Store::new(Some(args.database_dir)).unwrap();
     let api_config = babysteps::api::Config {
         event_store,
         address: ([127, 0, 0, 1], args.port),

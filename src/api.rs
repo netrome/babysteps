@@ -1,4 +1,4 @@
-pub async fn serve(conf: Config<impl Into<SocketAddr>>) {
+pub async fn serve(conf: Config<impl Into<SocketAddr>, impl EventStore + Clone + Send + Sync + 'static>) {
     let event_store = warp::any().map(move || conf.event_store.clone());
 
     let add_event = warp::post()
@@ -39,38 +39,38 @@ pub async fn serve(conf: Config<impl Into<SocketAddr>>) {
     warp::serve(routes).run(conf.address).await;
 }
 
-pub struct Config<Addr> {
-    pub event_store: EventStore,
+pub struct Config<Addr, E> {
+    pub event_store: E,
     pub address: Addr,
     pub static_root: PathBuf,
     pub bundle_root: PathBuf
 }
 
 #[tracing::instrument(skip(event_store))]
-async fn add_event_handler(event_store: EventStore, event: Event) -> Result<impl warp::Reply, Infallible> {
+async fn add_event_handler<E: EventStore>(event_store: E, event: Event) -> Result<impl warp::Reply, Infallible> {
     tracing::info!("Adding event. Id: {}, auth: {}", event.id_hex(), event.authenticate());
-    event_store.add_event(&event).expect("Error adding event");
+    event_store.add_event(&event).await.expect("Error adding event");
     Ok(StatusCode::CREATED)
 }
 
 #[tracing::instrument(skip(event_store))]
-async fn delete_event_handler(event_store: EventStore, event: Event) -> Result<impl warp::Reply, Infallible> {
+async fn delete_event_handler<E: EventStore>(event_store: E, event: Event) -> Result<impl warp::Reply, Infallible> {
     tracing::info!("Deleting event");
-    event_store.remove_event(&event).expect("Error removing event");
+    event_store.remove_event(&event).await.expect("Error removing event");
     Ok(StatusCode::CREATED)
 }
 
 #[tracing::instrument(skip(event_store))]
-async fn query_events_handler(event_store: EventStore, query: QueryEvents) -> Result<impl warp::Reply, Infallible> {
+async fn query_events_handler<E: EventStore>(event_store: E, query: QueryEvents) -> Result<impl warp::Reply, Infallible> {
     let count = query.count.unwrap_or(100);
-    let events = event_store.get_latest_events(count).expect("Error querying events");
+    let events = event_store.get_latest_events(count).await.expect("Error querying events");
     tracing::debug!("Returning events: {:?}", events.len());
     Ok(warp::reply::json(&events))
 }
 
 #[tracing::instrument(skip(event_store))]
-async fn query_baby_info_handler(event_store: EventStore) -> Result<impl warp::Reply, Infallible> {
-    let mut events: Vec<_> = event_store.get_latest_events(BABY_INFO_HORIZON).expect("Error querying events").into_iter().collect();
+async fn query_baby_info_handler<E: EventStore>(event_store: E) -> Result<impl warp::Reply, Infallible> {
+    let mut events: Vec<_> = event_store.get_latest_events(BABY_INFO_HORIZON).await.expect("Error querying events").into_iter().collect();
     events.sort_by_key(|event| std::cmp::Reverse(event.event_time));
 
     // Assume one of the last few events is a nap, OR DIE!
