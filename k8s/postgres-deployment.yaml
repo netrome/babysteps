@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:13  # Or whichever version you prefer
+        image: postgres:16
         ports:
         - containerPort: 5432
         env:
         - name: POSTGRES_DB
-          value: "exampledb"
+          value: "babysteps"
         - name: POSTGRES_USER
-          value: "exampleuser"
+          value: "user"
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
