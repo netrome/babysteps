@@ -1,4 +1,6 @@
-pub async fn serve(conf: Config<impl Into<SocketAddr>, impl EventStore + Clone + Send + Sync + 'static>) {
+pub async fn serve(
+    conf: Config<impl Into<SocketAddr>, impl EventStore + Clone + Send + Sync + 'static>,
+) {
     let event_store = warp::any().map(move || conf.event_store.clone());
 
     let add_event = warp::post()
@@ -43,41 +45,74 @@ pub struct Config<Addr, E> {
     pub event_store: E,
     pub address: Addr,
     pub static_root: PathBuf,
-    pub bundle_root: PathBuf
+    pub bundle_root: PathBuf,
 }
 
 #[tracing::instrument(skip(event_store))]
-async fn add_event_handler<E: EventStore>(event_store: E, event: Event) -> Result<impl warp::Reply, Infallible> {
-    tracing::info!("Adding event. Id: {}, auth: {}", event.id_hex(), event.authenticate());
-    event_store.add_event(&event).await.expect("Error adding event");
+async fn add_event_handler<E: EventStore>(
+    event_store: E,
+    event: Event,
+) -> Result<impl warp::Reply, Infallible> {
+    tracing::info!(
+        "Adding event. Id: {}, auth: {}",
+        event.id_hex(),
+        event.authenticate()
+    );
+    event_store
+        .add_event(&event)
+        .await
+        .expect("Error adding event");
     Ok(StatusCode::CREATED)
 }
 
 #[tracing::instrument(skip(event_store))]
-async fn delete_event_handler<E: EventStore>(event_store: E, event: Event) -> Result<impl warp::Reply, Infallible> {
+async fn delete_event_handler<E: EventStore>(
+    event_store: E,
+    event: Event,
+) -> Result<impl warp::Reply, Infallible> {
     tracing::info!("Deleting event");
-    event_store.remove_event(&event).await.expect("Error removing event");
+    event_store
+        .remove_event(&event)
+        .await
+        .expect("Error removing event");
     Ok(StatusCode::CREATED)
 }
 
 #[tracing::instrument(skip(event_store))]
-async fn query_events_handler<E: EventStore>(event_store: E, query: QueryEvents) -> Result<impl warp::Reply, Infallible> {
+async fn query_events_handler<E: EventStore>(
+    event_store: E,
+    query: QueryEvents,
+) -> Result<impl warp::Reply, Infallible> {
     let count = query.count.unwrap_or(100);
-    let events = event_store.get_latest_events(count).await.expect("Error querying events");
+    let events = event_store
+        .get_latest_events(count)
+        .await
+        .expect("Error querying events");
     tracing::debug!("Returning events: {:?}", events.len());
     Ok(warp::reply::json(&events))
 }
 
 #[tracing::instrument(skip(event_store))]
-async fn query_baby_info_handler<E: EventStore>(event_store: E) -> Result<impl warp::Reply, Infallible> {
-    let mut events: Vec<_> = event_store.get_latest_events(BABY_INFO_HORIZON).await.expect("Error querying events").into_iter().collect();
+async fn query_baby_info_handler<E: EventStore>(
+    event_store: E,
+) -> Result<impl warp::Reply, Infallible> {
+    let mut events: Vec<_> = event_store
+        .get_latest_events(BABY_INFO_HORIZON)
+        .await
+        .expect("Error querying events")
+        .into_iter()
+        .collect();
     events.sort_by_key(|event| std::cmp::Reverse(event.event_time));
 
     // Assume one of the last few events is a nap, OR DIE!
     let nap_status = events.iter().find_map(NapStatus::from_event).unwrap();
 
     // Same. This is some dangerous stuff!
-    let last_meal_time = events.iter().find(|event| event.is_meal()).unwrap().event_time; 
+    let last_meal_time = events
+        .iter()
+        .find(|event| event.is_meal())
+        .unwrap()
+        .event_time;
 
     let baby_info = BabyInfo {
         nap_status,
@@ -98,16 +133,20 @@ struct BabyInfo {
 #[derive(Debug, serde::Serialize)]
 enum NapStatus {
     #[serde(with = "time::serde::iso8601")]
-    Awake{since: time::OffsetDateTime},
+    Awake { since: time::OffsetDateTime },
     #[serde(with = "time::serde::iso8601")]
-    Asleep{since: time::OffsetDateTime},
+    Asleep { since: time::OffsetDateTime },
 }
 
 impl NapStatus {
     fn from_event(event: &Event) -> Option<Self> {
         match event.event_type {
-            EventType::NapStart(_) => Some(Self::Asleep{since: event.event_time}),
-            EventType::NapEnd(_) => Some(Self::Awake{since: event.event_time}),
+            EventType::NapStart(_) => Some(Self::Asleep {
+                since: event.event_time,
+            }),
+            EventType::NapEnd(_) => Some(Self::Awake {
+                since: event.event_time,
+            }),
             _ => None,
         }
     }
@@ -124,8 +163,8 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::path::PathBuf;
 
-use warp::Filter;
 use warp::http::StatusCode;
+use warp::Filter;
 
 use crate::event::Event;
 use crate::event::EventType;
