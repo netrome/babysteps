@@ -5,11 +5,13 @@ async fn main() {
     babysteps::log::init().expect("Failed to initialize logging");
     tracing::info!("Hello world!");
 
+    let ip_addr: IpAddr = args.ip.parse().expect("Failed to parse IP");
+
     // TODO: Swap event store. Make sure the new store runs migrations on startup :)
     let event_store = event_store(&args).await;
     let api_config = babysteps::api::Config {
         event_store,
-        address: ([127, 0, 0, 1], args.port),
+        address: (ip_addr, args.port),
         static_root: args.static_root,
         bundle_root: args.bundle_root,
     };
@@ -59,8 +61,12 @@ struct Cli {
     /// Port to serve on
     #[arg(short, long, env = "BS_PORT")]
     port: u16,
+
+    /// IP to serve on. Should in most scenarios be either 127.0.0.1 or 0.0.0.0
+    #[arg(short, long, env = "BS_IP")]
+    ip: String,
 }
 
-use std::path::PathBuf;
+use std::{path::PathBuf, net::IpAddr};
 
 use clap::Parser;

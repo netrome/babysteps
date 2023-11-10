@@ -30,6 +30,7 @@ COPY --from=backend-builder /usr/src/babysteps/target/x86_64-unknown-linux-musl/
 # Set environment variables
 ENV BS_STATIC_ROOT=/app/static
 ENV BS_BUNDLE_ROOT=/app/public
+ENV BS_IP=0.0.0.0
 ENV BS_PORT=8080
 
 # Expose the port the app runs on
