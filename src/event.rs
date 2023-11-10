@@ -80,16 +80,14 @@ impl Event {
     }
 
     pub fn authenticate(&self) -> bool {
-        let Some(auth) = &self.auth else {
-            return false
-        };
+        let Some(auth) = &self.auth else { return false };
 
         let Ok(verifying_key) = VerifyingKey::from_bytes(&auth.verifying_key) else {
-            return false
+            return false;
         };
 
         let Ok(signature): Result<Signature, _> = auth.signature.as_ref().try_into() else {
-            return false
+            return false;
         };
 
         verifying_key.verify_prehash(&self.id(), &signature).is_ok()

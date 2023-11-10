@@ -14,7 +14,12 @@ async fn main() {
         bundle_root: args.bundle_root,
     };
 
-    babysteps::api::serve(api_config).await;
+    tokio::select! {
+        _ = babysteps::api::serve(api_config) => {}
+        _ = tokio::signal::ctrl_c() => {
+            println!("Received Ctrl-C signal. Shutting down")
+        }
+    }
 }
 
 #[cfg(feature = "postgres")]
