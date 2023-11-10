@@ -23,6 +23,7 @@ WORKDIR /root/
 
 # Copy the front-end build
 COPY --from=frontend-builder /app/public /app/public
+COPY --from=frontend-builder /app/static /app/static
 # Copy the back-end build
 COPY --from=backend-builder /usr/src/babysteps/target/x86_64-unknown-linux-musl/release/babysteps .
 
