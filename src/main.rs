@@ -67,6 +67,6 @@ struct Cli {
     ip: String,
 }
 
-use std::{path::PathBuf, net::IpAddr};
+use std::{net::IpAddr, path::PathBuf};
 
 use clap::Parser;

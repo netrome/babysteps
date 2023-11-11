@@ -11,6 +11,7 @@ ciborium = "0.2.1"
 clap = { version = "4.4.5", features = ["derive", "env"] }
 hex-literal = "0.4.1"
 k256 = { version = "0.13.1", features = ["schnorr", "serde"] }
+reqwest = { version = "0.11.22", features = ["json"] }
 serde = { version = "1.0.188", features = ["derive"] }
 serde-big-array = "0.5.1"
 serde_json = "1.0"
@@ -35,3 +36,6 @@ linker = "x86_64-linux-musl-gcc"
 default = ["sled"]
 postgres = []
 sled = []
+
+[[bin]]
+name = "backup"
